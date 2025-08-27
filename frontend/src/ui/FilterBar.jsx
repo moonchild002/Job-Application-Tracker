@@ -1,19 +1,20 @@
 "use client"
 
-import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon, CalendarIcon } from "@heroicons/react/24/outline"
 
 const statusOptions = ["All", "Applied", "Interview", "Rejected", "Offer", "Hired"]
 
-export default function FilterBar({ query, setQuery, status, setStatus }) {
+export default function FilterBar({ query, setQuery, status, setStatus, searchDate, setSearchDate }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-lg space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-6">
+    <div className="bg-card border border-border rounded-xl p-6 shadow-lg flex flex-col gap-6 w-full">
+      
       {/* Search by Company */}
-      <div className="space-y-2">
+      <div className="space-y-2 w-full">
         <label className="flex items-center gap-2 text-sm font-semibold text-card-foreground">
           <MagnifyingGlassIcon className="h-4 w-4 text-primary" />
           Search Companies
         </label>
-        <div className="relative">
+        <div className="relative w-full">
           <input
             type="text"
             className="w-full bg-input border border-border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
@@ -26,7 +27,7 @@ export default function FilterBar({ query, setQuery, status, setStatus }) {
       </div>
 
       {/* Filter by Status */}
-      <div className="space-y-2">
+      <div className="space-y-2 w-full">
         <label className="flex items-center gap-2 text-sm font-semibold text-card-foreground">
           <FunnelIcon className="h-4 w-4 text-primary" />
           Filter by Status
@@ -44,12 +45,27 @@ export default function FilterBar({ query, setQuery, status, setStatus }) {
         </select>
       </div>
 
+      {/* Filter by Date */}
+      <div className="space-y-2 w-full">
+        <label className="flex items-center gap-2 text-sm font-semibold text-card-foreground">
+          <CalendarIcon className="h-4 w-4 text-primary" />
+          Filter by Date Applied
+        </label>
+        <input
+          type="date"
+          className="w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+        />
+      </div>
+
       {/* Reset Button */}
-      <div className="flex items-end">
+      <div className="flex w-full">
         <button
           onClick={() => {
             setQuery("")
             setStatus("All")
+            setSearchDate("")
           }}
           className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-muted border border-border text-muted-foreground rounded-lg hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all duration-200 font-semibold"
         >

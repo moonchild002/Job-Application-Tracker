@@ -2,10 +2,26 @@ import Job from '../models/Job.js';
 
 export const getJobs = async (req, res, next) => {
   try {
-    const { q, status } = req.query;
+    const { q, status, searchDate } = req.query;
     const filter = {};
+    
     if (q) filter.company = { $regex: q, $options: 'i' };
     if (status && status !== 'All') filter.status = status;
+    
+    // Date search filtering
+    if (searchDate) {
+      const startOfDay = new Date(searchDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      
+      const endOfDay = new Date(searchDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      filter.dateApplied = {
+        $gte: startOfDay,
+        $lte: endOfDay
+      };
+    }
+    
     const jobs = await Job.find(filter).sort({ createdAt: -1 });
     res.json(jobs);
   } catch (err) {

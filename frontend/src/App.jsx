@@ -2,6 +2,7 @@ import { Routes, Route, Link, NavLink } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import EditJob from './pages/EditJob.jsx'
 import Contact from './pages/Contact.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
 
 
 export default function App() {
@@ -27,6 +28,12 @@ export default function App() {
             >
               Contact
             </NavLink>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `px-3 py-2 rounded-lg text-sm font-medium ${isActive ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
+            >
+              Admin
+            </NavLink>
             <a
               className="px-3 py-2 rounded-lg text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               href="https://example.com"
@@ -51,6 +58,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/edit/:id" element={<EditJob />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
 

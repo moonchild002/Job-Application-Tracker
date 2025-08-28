@@ -84,16 +84,16 @@ export default function JobForm({ onSubmit, initial }) {
     
     setSubmitting(true)
     try {
-      const payload = { company, title, status, notes }
-      if (dateApplied) payload.dateApplied = new Date(dateApplied).toISOString()
-      await onSubmit(payload)
+    const payload = { company, title, status, notes }
+    if (dateApplied) payload.dateApplied = new Date(dateApplied).toISOString()
+    await onSubmit(payload)
       
-      if (!initial) {
-        setCompany("")
-        setTitle("")
-        setStatus("Applied")
-        setDateApplied("")
-        setNotes("")
+    if (!initial) {
+      setCompany("")
+      setTitle("")
+      setStatus("Applied")
+      setDateApplied("")
+      setNotes("")
         setErrors({})
       }
     } finally {

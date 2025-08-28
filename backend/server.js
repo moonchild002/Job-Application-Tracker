@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
 import jobRoutes from './routes/jobRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 import nodemailer from 'nodemailer';
+import Contact from './models/Contact.js';
 
 
 dotenv.config();
@@ -47,11 +49,15 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true })
 })
 
+// Test contacts route
+app.get('/api/contacts/test', (req, res) => {
+  res.json({ message: 'Contacts route is working' })
+})
+
 app.use('/api/jobs', jobRoutes);
 
-
 // =======================
-// Contact Form Route
+// Contact Form Route (Legacy - now saves to DB + sends email)
 // =======================
 app.post('/api/contact', async (req, res) => {
   const { name, nic, dob, address, phone, email, message } = req.body;
@@ -61,19 +67,29 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Configure Nodemailer transporter
+    // First save to database
+    const contact = await Contact.create({
+      name,
+      phone,
+      email,
+      address,
+      nic,
+      dob: dob ? new Date(dob) : undefined,
+      message
+    });
+
+    // Then send email
     const transporter = nodemailer.createTransport({
-      service: 'Gmail', // You can use Gmail or any SMTP service
+      service: 'Gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-    // Mail options
     const mailOptions = {
-      from: email, // sender (user who filled form)
-      to: process.env.EMAIL_USER, // your email to receive messages
+      from: email,
+      to: process.env.EMAIL_USER,
       subject: `Contact Form Message from ${name}`,
       html: `
         <h3>Contact Form Submission</h3>
@@ -89,12 +105,15 @@ app.post('/api/contact', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ success: true, message: 'Email sent successfully' });
+    res.status(200).json({ success: true, message: 'Email sent successfully', contactId: contact._id });
   } catch (err) {
-    console.error('Email send failed:', err);
-    res.status(500).json({ success: false, error: 'Failed to send email' });
+    console.error('Contact save/email failed:', err);
+    res.status(500).json({ success: false, error: 'Failed to save contact or send email' });
   }
 });
+
+// Place contacts routes after the legacy contact route to avoid conflicts
+app.use('/api/contacts', contactRoutes);
 
 // 404 handler
 app.use((req, res, next) => {

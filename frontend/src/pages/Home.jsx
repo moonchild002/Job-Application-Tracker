@@ -109,14 +109,14 @@ export default function Home() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-card-foreground">
-                Your Applications
-                {jobs.length > 0 && (
-                  <span className="ml-2 text-sm font-normal text-muted-foreground">
-                    ({jobs.length} {jobs.length === 1 ? "application" : "applications"})
-                  </span>
-                )}
-              </h2>
+            <h2 className="text-xl font-bold text-card-foreground">
+              Your Applications
+              {jobs.length > 0 && (
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                  ({jobs.length} {jobs.length === 1 ? "application" : "applications"})
+                </span>
+              )}
+            </h2>
             </div>
             {jobs.length > 0 && (
               <button
